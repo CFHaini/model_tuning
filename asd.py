@@ -1,44 +1,24 @@
-def triangles():
-    yield [1]
-    x=[1]
+def _odd_iter():
+    n = 1
     while True:
-        x=[1]+[x[i]+x[i+1] for i in range(len(x)-1)]+[1]
-        yield x
+        n = n + 2
+        yield n
 
-# 期待输出:
-# [1]
-# [1, 1]
-# [1, 2, 1]
-# [1, 3, 3, 1]
-# [1, 4, 6, 4, 1]
-# [1, 5, 10, 10, 5, 1]
-# [1, 6, 15, 20, 15, 6, 1]
-# [1, 7, 21, 35, 35, 21, 7, 1]
-# [1, 8, 28, 56, 70, 56, 28, 8, 1]
-# [1, 9, 36, 84, 126, 126, 84, 36, 9, 1]
-n = 0
-results = []
-for t in triangles():
-    results.append(t)
-    n = n + 1
-    if n == 10:
+
+def _not_divisible(n):
+    return lambda x: x % n > 0
+
+def primes():
+    yield 2
+    it = _odd_iter() # 初始序列
+    while True:
+        n = next(it) # 返回序列的第一个数
+        yield n
+        it = filter(_not_divisible(n), it) # 构造新序列
+
+# 打印100以内的素数:
+for n in primes():
+    if n < 100:
+        print(n)
+    else:
         break
-
-for t in results:
-    print(t)
-
-if results == [
-    [1],
-    [1, 1],
-    [1, 2, 1],
-    [1, 3, 3, 1],
-    [1, 4, 6, 4, 1],
-    [1, 5, 10, 10, 5, 1],
-    [1, 6, 15, 20, 15, 6, 1],
-    [1, 7, 21, 35, 35, 21, 7, 1],
-    [1, 8, 28, 56, 70, 56, 28, 8, 1],
-    [1, 9, 36, 84, 126, 126, 84, 36, 9, 1]
-]:
-    print('测试通过!')
-else:
-    print('测试失败!')
